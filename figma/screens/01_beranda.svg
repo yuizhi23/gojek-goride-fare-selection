@@ -1,0 +1,86 @@
+<svg width="360" height="800" viewBox="0 0 360 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
+      text { font-family: 'Inter', -apple-system, sans-serif; }
+    </style>
+  </defs>
+
+  <rect width="360" height="800" fill="#FFFFFF"/>
+  <rect width="360" height="28" fill="#FFFFFF"/>
+  <text x="20" y="19" font-size="11" font-weight="600" fill="#1A1A1A">08:15</text>
+
+  <!-- Header -->
+  <text x="16" y="56" font-size="13" font-weight="400" fill="#5F6368">Halo,</text>
+  <text x="16" y="76" font-size="18" font-weight="700" fill="#1A1A1A">Raka Pratama</text>
+
+  <!-- Profile Button -->
+  <circle cx="328" cy="64" r="18" fill="#F3F4F6"/>
+  <circle cx="328" cy="60" r="6" stroke="#1A1A1A" stroke-width="1.8" fill="none"/>
+  <path d="M318 73C318 69 322 67 328 67C334 67 338 69 338 73" stroke="#1A1A1A" stroke-width="1.8" fill="none"/>
+
+  <!-- Preference Active Banner -->
+  <g id="Molekul-BannerPreferensi">
+    <rect x="16" y="98" width="328" height="48" rx="8" fill="#E8F3EE"/>
+    <circle cx="36" cy="122" r="10" fill="#0B6E4F"/>
+    <path d="M33 122L35.5 124.5L39.5 120" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+    <text x="56" y="117" font-size="13" font-weight="600" fill="#0B6E4F">Preferensi Hemat aktif</text>
+    <text x="56" y="133" font-size="11" font-weight="400" fill="#5F6368">Maks. +3 mnt jemput • Tap untuk atur</text>
+    <path d="M328 118L332 122L328 126" stroke="#0B6E4F" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Search Pill -->
+  <g id="Molekul-SearchPill">
+    <rect x="16" y="158" width="328" height="48" rx="24" fill="#F3F4F6"/>
+    <circle cx="38" cy="182" r="6" stroke="#5F6368" stroke-width="1.8" fill="none"/>
+    <path d="M42.5 186.5L47 191" stroke="#5F6368" stroke-width="1.8" stroke-linecap="round"/>
+    <text x="56" y="187" font-size="14" font-weight="400" fill="#5F6368">Mau ke mana hari ini?</text>
+  </g>
+
+  <!-- 4-Column Services Grid -->
+  <g id="Organism-ServiceGrid">
+    <!-- GoRide -->
+    <rect x="24" y="226" width="48" height="48" rx="14" fill="#E8F5E9"/>
+    <circle cx="48" cy="250" r="10" fill="#0B6E4F"/>
+    <text x="48" y="290" font-size="12" font-weight="500" fill="#1A1A1A" text-anchor="middle">GoRide</text>
+
+    <!-- GoCar -->
+    <rect x="112" y="226" width="48" height="48" rx="14" fill="#E0F2FE"/>
+    <circle cx="136" cy="250" r="10" fill="#0284C7"/>
+    <text x="136" y="290" font-size="12" font-weight="500" fill="#1A1A1A" text-anchor="middle">GoCar</text>
+
+    <!-- GoFood -->
+    <rect x="200" y="226" width="48" height="48" rx="14" fill="#FEE2E2"/>
+    <circle cx="224" cy="250" r="10" fill="#DC2626"/>
+    <text x="224" y="290" font-size="12" font-weight="500" fill="#1A1A1A" text-anchor="middle">GoFood</text>
+
+    <!-- GoSend -->
+    <rect x="288" y="226" width="48" height="48" rx="14" fill="#FEF3C7"/>
+    <circle cx="312" cy="250" r="10" fill="#D97706"/>
+    <text x="312" y="290" font-size="12" font-weight="500" fill="#1A1A1A" text-anchor="middle">GoSend</text>
+  </g>
+
+  <!-- Promo Card -->
+  <rect x="16" y="318" width="328" height="100" rx="8" fill="#0B6E4F"/>
+  <text x="32" y="344" font-size="11" font-weight="600" fill="#E8F3EE" letter-spacing="0.5">PAGI MAHASISWA CERMAT</text>
+  <text x="32" y="368" font-size="15" font-weight="700" fill="#FFFFFF">Hemat s.d. Rp4.500 tiap perjalanan pagi!</text>
+  <text x="32" y="392" font-size="12" font-weight="400" fill="#FFFFFF" fill-opacity="0.85">Preferensi tarif otomatis mengutamakan opsi terbaik.</text>
+
+  <!-- Savings Summary Card -->
+  <rect x="16" y="434" width="328" height="60" rx="8" fill="#FFFFFF" stroke="#F3F4F6"/>
+  <circle cx="42" cy="464" r="16" fill="#F3F4F6"/>
+  <text x="70" y="458" font-size="13" font-weight="600" fill="#1A1A1A">Total Hemat Bulan Ini</text>
+  <text x="70" y="476" font-size="11" font-weight="400" fill="#5F6368">Rp36.000 dihemat dengan opsi Hemat</text>
+  <text x="328" y="468" font-size="13" font-weight="700" fill="#0B6E4F" text-anchor="end">Lihat</text>
+
+  <!-- Bottom Nav 4 Tabs -->
+  <g id="Organism-BottomNav">
+    <rect y="740" width="360" height="60" fill="#FFFFFF"/>
+    <line x1="0" y1="740" x2="360" y2="740" stroke="#F3F4F6" stroke-width="1"/>
+    
+    <text x="45" y="774" font-size="11" font-weight="600" fill="#0B6E4F" text-anchor="middle">Beranda</text>
+    <text x="135" y="774" font-size="11" font-weight="500" fill="#5F6368" text-anchor="middle">Promo</text>
+    <text x="225" y="774" font-size="11" font-weight="500" fill="#5F6368" text-anchor="middle">Aktivitas</text>
+    <text x="315" y="774" font-size="11" font-weight="500" fill="#5F6368" text-anchor="middle">Chat</text>
+  </g>
+</svg>

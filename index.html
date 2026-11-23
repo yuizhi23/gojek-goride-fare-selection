@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gojek GoRide - Pemilihan Tarif Hi-Fi Mobile Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       DESIGN SYSTEM TOKENS (CSS Variables - Sesuai Spesifikasi Wajib)
+       ========================================================================== */
+    :root {
+      /* Colors */
+      --primary: #0B6E4F;
+      --primary-hover: #08523A;
+      --primary-active: #063B29;
+      --primary-subtle: #E8F3EE;
+      --text-primary: #1A1A1A;
+      --text-secondary: #5F6368;
+      --surface: #FFFFFF;
+      --surface-muted: #F3F4F6;
+      --border: #8D949E;
+      --warning-bg: #FFF4E0;
+      --warning-text: #8A5A00;
+      --error: #B3261E;
+
+      /* Additional neutrals & shadows */
+      --scrim: rgba(0, 0, 0, 0.40);
+      --card-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+      --sheet-shadow: 0 -8px 28px rgba(0, 0, 0, 0.16);
+      --device-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 0 10px #1E242B, 0 0 0 12px #374151;
+
+      /* Typography (Inter) */
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Plus Jakarta Sans', var(--font-family);
+      
+      --type-title: 700 24px/32px var(--font-family);
+      --type-price: 600 20px/28px var(--font-family);
+      --type-body-strong: 600 16px/24px var(--font-family);
+      --type-body: 400 16px/24px var(--font-family);
+      --type-small: 400 14px/20px var(--font-family);
+      --type-caption: 500 12px/16px var(--font-family);
+
+      /* Spacing (8pt Grid) */
+      --space-4: 4px;
+      --space-8: 8px;
+      --space-16: 16px;
+      --space-24: 24px;
+      --space-32: 32px;
+      --space-48: 48px;
+
+      /* Radii */
+      --radius-badge: 4px;
+      --radius-card: 8px;
+      --radius-input: 8px;
+      --radius-button: 8px;
+      --radius-sheet: 16px;
+      --radius-pill: 999px;
+
+      /* Sizing constraints */
+      --min-touch-target: 44px;
+      --min-element-height: 48px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: #0B0F19;
+      background-image: 
+        radial-gradient(at 10% 20%, rgba(11, 110, 79, 0.15) 0px, transparent 50%),
+        radial-gradient(at 90% 80%, rgba(30, 64, 175, 0.12) 0px, transparent 50%);
+      color: #F3F4F6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 16px 40px 16px;
+      overflow-x: hidden;
+    }
+
+    /* Top App Presenter Toolbar */
+    .presenter-header {
+      max-width: 1000px;
+      width: 100%;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(16px);
+      padding: 12px 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .presenter-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .presenter-brand-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: 0 4px 12px rgba(11, 110, 79, 0.4);
+    }
+
+    .presenter-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .presenter-subtitle {
+      font-size: 12px;
+      color: #94A3B8;
+    }
+
+    .state-switcher {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .state-btn {
+      background: #1E293B;
+      border: 1px solid #334155;
+      color: #CBD5E1;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .state-btn:hover {
+      background: #334155;
+      color: #FFFFFF;
+      border-color: #475569;
+    }
+
+    .state-btn.active {
+      background: var(--primary);
+      border-color: #10B981;
+      color: #FFFFFF;
+      font-weight: 600;
+      box-shadow: 0 2px 10px rgba(11, 110, 79, 0.4);
+    }
+
+    .tool-btn {
+      background: transparent;
+      border: 1px dashed #64748B;
+      color: #94A3B8;
+      padding: 6px 10px;
+      font-size: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .tool-btn.active {
+      border-color: #10B981;
+      color: #10B981;
+      background: rgba(16, 185, 129, 0.12);
+    }
+
+    /* Main Workspace Layout */
+    .prototype-workspace {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+      justify-content: center;
+      max-width: 1100px;
+      width: 100%;
+    }
+
+    /* 360 x 800 Device Mockup Frame */
+    .device-frame {
+      width: 360px;
+      height: 800px;
+      background: var(--surface);
+      border-radius: 40px;
+      box-shadow: var(--device-shadow);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transform: translateZ(0);
+    }
+
+    /* Realistic Speaker & Camera Notch */
+    .device-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 130px;
+      height: 24px;
+      background: #1E242B;
+      border-bottom-left-radius: 14px;
+      border-bottom-right-radius: 14px;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+    }
+    .device-speaker {
+      width: 44px;
+      height: 4px;
+      background: #374151;
+      border-radius: 2px;
+    }
+    .device-camera {
+      width: 8px;
+      height: 8px;
+      background: #0F172A;
+      border: 1.5px solid #1F2937;
+      border-radius: 50%;
+      margin-left: 12px;
+    }
+
+    /* Screen Viewport */
+    .screen-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 8pt Grid Overlay */
+    .grid-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      display: none;
+      background: repeating-linear-gradient(to bottom, rgba(239, 68, 68, 0.08) 0px, rgba(239, 68, 68, 0.08) 1px, transparent 1px, transparent 8px),
+                  repeating-linear-gradient(to right, rgba(239, 68, 68, 0.08) 0px, rgba(239, 68, 68, 0.08) 1px, transparent 1px, transparent 8px);
+    }
+    .grid-overlay.active {
+      display: block;
+    }
+    .grid-columns-overlay {
+      position: absolute;
+      inset: 0;
+      padding: 0 var(--space-16);
+      display: flex;
+      gap: var(--space-16);
+      pointer-events: none;
+      z-index: 9998;
+      display: none;
+    }
+    .grid-columns-overlay.active {
+      display: flex;
+    }
+    .grid-column-guide {
+      flex: 1;
+      background: rgba(59, 130, 246, 0.06);
+      border-left: 1px dashed rgba(59, 130, 246, 0.3);
+      border-right: 1px dashed rgba(59, 130, 246, 0.3);
+      height: 100%;
+    }
+
+    /* Status Bar: 28dp */
+    .status-bar {
+      height: 28px;
+      padding: 4px var(--space-16) 0 var(--space-16);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-primary);
+      z-index: 900;
+      background: transparent;
+    }
+    .status-bar-icons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* App Top Bar */
+    .app-top-bar {
+      height: 56px;
+      padding: 0 var(--space-16);
+      display: flex;
+      align-items: center;
+      gap: var(--space-16);
+      background: var(--surface);
+      border-bottom: 1px solid var(--surface-muted);
+      z-index: 50;
+      flex-shrink: 0;
+    }
+    .app-top-bar-title {
+      font: var(--type-body-strong);
+      color: var(--text-primary);
+      flex: 1;
+    }
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: var(--surface);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      cursor: pointer;
+      color: var(--text-primary);
+      transition: background 0.15s;
+    }
+    .icon-btn:active {
+      background: var(--surface-muted);
+    }
+
+    /* Screen Views */
+    .screen-view {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+      background: var(--surface);
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .screen-view.active {
+      display: flex;
+      opacity: 1;
+      z-index: 20;
+    }
+
+    /* ==========================================================================
+       ATOMIC DESIGN COMPONENTS
+       ========================================================================== */
+
+    /* [Atom/Button] */
+    .atom-button {
+      height: var(--min-element-height);
+      min-height: var(--min-element-height);
+      border-radius: var(--radius-button);
+      font: var(--type-body-strong);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-8);
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      padding: 0 var(--space-16);
+      transition: all 0.15s ease;
+      position: relative;
+      touch-action: manipulation;
+    }
+    .atom-button:active {
+      transform: scale(0.985);
+    }
+
+    .atom-button--primary {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+    .atom-button--primary:active {
+      background: var(--primary-hover);
+    }
+    .atom-button--primary.disabled,
+    .atom-button--primary:disabled {
+      background: var(--surface-muted);
+      color: var(--border);
+      cursor: not-allowed;
+      border: 1px solid var(--border);
+      transform: none !important;
+    }
+
+    .atom-button--secondary {
+      background: transparent;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+    }
+    .atom-button--secondary:active {
+      background: var(--primary-subtle);
+    }
+
+    /* Button Loading State Spinner */
+    .atom-button.is-loading {
+      color: transparent !important;
+      pointer-events: none;
+    }
+    .atom-button.is-loading::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 2.5px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #FFFFFF;
+      border-radius: 50%;
+      animation: button-spin 0.6s linear infinite;
+    }
+    @keyframes button-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* [Atom/Badge] */
+    .atom-badge {
+      font: var(--type-caption);
+      padding: 2px 6px;
+      border-radius: var(--radius-badge);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .atom-badge--primary-subtle {
+      background: var(--primary-subtle);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .atom-badge--warning {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      font-weight: 600;
+    }
+
+    /* [Atom/Radio] */
+    .atom-radio {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+    .atom-radio.is-selected {
+      border-color: var(--primary);
+    }
+    .atom-radio.is-selected::after {
+      content: "";
+      width: 10px;
+      height: 10px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+
+    /* [Molekul/KartuOpsiTarif]
+       Prinsip: Equal visual weight, selected = border 2 primary, BUKAN latar hijau! */
+    .molekul-kartu-opsi-tarif {
+      flex: 1;
+      min-height: 104px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: var(--space-8);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: border 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+      position: relative;
+    }
+    .molekul-kartu-opsi-tarif:active {
+      transform: scale(0.985);
+    }
+    .molekul-kartu-opsi-tarif.is-selected {
+      border: 2px solid var(--primary);
+      box-shadow: 0 4px 12px rgba(11, 110, 79, 0.14);
+      padding: 7px;
+    }
+
+    .kartu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-4);
+    }
+    .kartu-service-name {
+      font: var(--type-body-strong);
+      color: var(--text-primary);
+    }
+    .kartu-price {
+      font: var(--type-price);
+      color: var(--text-primary);
+      margin-bottom: 2px;
+      letter-spacing: -0.01em;
+    }
+    .kartu-pickup-estimate {
+      font: var(--type-caption);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .kartu-badge-container {
+      margin-top: var(--space-4);
+      min-height: 18px;
+    }
+
+    /* [Molekul/StripSelisih] */
+    .molekul-strip-selisih {
+      width: 100%;
+      min-height: 38px;
+      background: var(--primary-subtle);
+      border-radius: var(--radius-card);
+      padding: var(--space-8) var(--space-16);
+      display: flex;
+      align-items: center;
+      gap: var(--space-8);
+      font: var(--type-small);
+      color: var(--primary);
+      font-weight: 500;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .molekul-strip-selisih.is-warning {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+    }
+
+    /* Warning Banner Edge Case E1 */
+    .edge-case-banner {
+      width: 100%;
+      background: var(--warning-bg);
+      border: 1px solid #FCD34D;
+      border-radius: var(--radius-card);
+      padding: var(--space-8) var(--space-12);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-8);
+      font: var(--type-caption);
+      color: var(--warning-text);
+      line-height: 16px;
+      margin-bottom: var(--space-8);
+      animation: fadeIn 0.2s ease;
+    }
+
+    /* [Organism/Bottom Sheet] */
+    .organism-bottom-sheet {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-top-left-radius: var(--radius-sheet);
+      border-top-right-radius: var(--radius-sheet);
+      box-shadow: var(--sheet-shadow);
+      padding: var(--space-8) var(--space-16) var(--space-24) var(--space-16);
+      z-index: 100;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bottom-sheet-handle {
+      width: 36px;
+      height: 4px;
+      background: #D1D5DB;
+      border-radius: var(--radius-pill);
+      margin: 0 auto var(--space-12) auto;
+    }
+
+    .cards-row-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+      width: 100%;
+    }
+
+    /* Skeleton Loading Shimmer */
+    .skeleton-box {
+      background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Toast */
+    .atom-toast {
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: rgba(26, 26, 26, 0.95);
+      color: #FFFFFF;
+      font: var(--type-small);
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .atom-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Map Background */
+    .map-canvas-container {
+      position: absolute;
+      inset: 0;
+      background: #EAF0EC;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .map-svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Segmented Control */
+    .segmented-control {
+      display: flex;
+      background: var(--surface-muted);
+      padding: 4px;
+      border-radius: var(--radius-card);
+      gap: 4px;
+    }
+    .segmented-item {
+      flex: 1;
+      text-align: center;
+      padding: 8px 12px;
+      font: var(--type-small);
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .segmented-item.active {
+      background: var(--surface);
+      color: var(--primary);
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Custom Slider */
+    .slider-range-input {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: #D1D5DB;
+      outline: none;
+    }
+    .slider-range-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav-bar {
+      height: 60px;
+      background: var(--surface);
+      border-top: 1px solid var(--surface-muted);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 var(--space-8);
+      margin-top: auto;
+      z-index: 50;
+    }
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      color: var(--text-secondary);
+      font: var(--type-caption);
+      cursor: pointer;
+    }
+    .bottom-nav-item.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Services Grid */
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-16) var(--space-8);
+      padding: var(--space-16);
+      text-align: center;
+    }
+    .service-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-8);
+      cursor: pointer;
+    }
+    .service-icon-box {
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #E8F5E9;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transition: transform 0.15s;
+    }
+    .service-item:active .service-icon-box {
+      transform: scale(0.92);
+    }
+
+    /* Pill Search */
+    .pill-search-container {
+      margin: 0 var(--space-16) var(--space-16) var(--space-16);
+      background: var(--surface-muted);
+      border-radius: var(--radius-pill);
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0 var(--space-16);
+      gap: var(--space-12);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+    }
+    .pill-search-container:hover {
+      border-color: #D1D5DB;
+    }
+
+    /* History Rows */
+    .history-row {
+      min-height: 56px;
+      padding: var(--space-8) var(--space-16);
+      display: flex;
+      align-items: center;
+      gap: var(--space-16);
+      border-bottom: 1px solid var(--surface-muted);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .history-row:active {
+      background: var(--surface-muted);
+    }
+    .history-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--surface-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+
+    /* Driver Card */
+    .driver-card {
+      background: var(--surface);
+      border: 1px solid #E5E7EB;
+      border-radius: var(--radius-card);
+      padding: var(--space-16);
+      display: flex;
+      align-items: center;
+      gap: var(--space-16);
+    }
+    .driver-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #E5E7EB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: #6B7280;
+      flex-shrink: 0;
+      border: 2px solid var(--primary-subtle);
+    }
+    .savings-highlight-box {
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      border-radius: var(--radius-card);
+      padding: var(--space-12) var(--space-16);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-8);
+      font: var(--type-small);
+      color: #166534;
+      line-height: 20px;
+    }
+
+    /* Error Screen */
+    .error-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-32) var(--space-16);
+      text-align: center;
+      gap: var(--space-16);
+    }
+    .error-icon-box {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #FEE2E2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--error);
+    }
+
+    /* Desktop Sidebar Inspector */
+    .prototype-sidebar {
+      width: 330px;
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 13px;
+      color: #94A3B8;
+      line-height: 1.6;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    .prototype-sidebar h3 {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      color: #F8FAFC;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .token-chip {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 11px;
+      background: #0F172A;
+      color: #E2E8F0;
+      margin: 2px 0;
+      border: 1px solid #334155;
+    }
+    .token-color-preview {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    @media (max-width: 900px) {
+      .prototype-workspace {
+        flex-direction: column;
+        align-items: center;
+      }
+      .prototype-sidebar {
+        width: 360px;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Controller Toolbar -->
+  <header class="presenter-header">
+    <div class="presenter-brand">
+      <div class="presenter-brand-icon">G</div>
+      <div>
+        <div class="presenter-title">
+          <span>Gojek GoRide Hi-Fi Prototype</span>
+          <span style="font-size: 11px; font-weight: 600; background: var(--primary); color: #fff; padding: 2px 8px; border-radius: 999px;">360 × 800 dp</span>
+        </div>
+        <div class="presenter-subtitle">Solusi Pemilihan Tarif Berkeadilan untuk Persona Raka (21 thn)</div>
+      </div>
+    </div>
+    
+    <div class="state-switcher">
+      <button class="state-btn active" onclick="goToScreen('screen-home')">1. Beranda</button>
+      <button class="state-btn" onclick="goToScreen('screen-preference')">2. Preferensi</button>
+      <button class="state-btn" onclick="goToScreen('screen-search')">3. Tujuan</button>
+      <button class="state-btn" onclick="goToScreen('screen-fare')">4. Pilih Tarif</button>
+      <button class="state-btn" onclick="setTariffState('loading')">Skeleton</button>
+      <button class="state-btn" onclick="setTariffState('edge1')">E1 Hemat Ramai</button>
+      <button class="state-btn" onclick="setTariffState('error')">Error</button>
+      <button class="state-btn" onclick="goToScreen('screen-driver')">5. Driver</button>
+      <button class="tool-btn" id="toggleGridBtn" onclick="toggleGrid()">8pt Grid</button>
+    </div>
+  </header>
+
+  <div class="prototype-workspace">
+
+    <!-- 360 x 800 Mobile Device Mockup -->
+    <div class="device-frame" id="deviceFrame" data-layer="Frame/Mobile-360x800">
+      
+      <!-- Top Speaker Notch -->
+      <div class="device-notch">
+        <div class="device-speaker"></div>
+        <div class="device-camera"></div>
+      </div>
+
+      <!-- 8pt Grid Overlay (Toggleable) -->
+      <div class="grid-overlay" id="gridOverlay"></div>
+      <div class="grid-columns-overlay" id="colOverlay">
+        <div class="grid-column-guide"></div>
+        <div class="grid-column-guide"></div>
+        <div class="grid-column-guide"></div>
+        <div class="grid-column-guide"></div>
+      </div>
+
+      <!-- Toast Notification Container -->
+      <div class="atom-toast" id="systemToast" role="alert" aria-live="assertive">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span id="toastMessage">Preferensi tersimpan</span>
+      </div>
+
+      <!-- Main Screen Viewport Container -->
+      <div class="screen-container">
+
+        <!-- ====================================================================
+             LAYAR 1: BERANDA
+             ==================================================================== -->
+        <div class="screen-view active" id="screen-home" data-layer="Layar/Beranda">
+          <!-- Status Bar -->
+          <div class="status-bar" data-layer="Atom/StatusBar">
+            <span>08:15</span>
+            <div class="status-bar-icons">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+            </div>
+          </div>
+
+          <!-- Top Bar: Greeting & Profile Button -->
+          <div style="padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;" data-layer="Organism/HomeHeader">
+            <div>
+              <div style="font: var(--type-small); color: var(--text-secondary);">Halo,</div>
+              <div style="font: var(--type-body-strong); color: var(--text-primary); font-family: var(--font-display);">Raka Pratama</div>
+            </div>
+            <!-- Profile Icon: Menuju Preferensi Tarif -->
+            <button class="icon-btn" onclick="goToScreen('screen-preference')" title="Buka Preferensi Tarif" aria-label="Profil dan Preferensi" data-layer="Atom/ProfileButton">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </button>
+          </div>
+
+          <!-- GoPay Balance Mini Card -->
+          <div style="margin: 0 16px 12px 16px; background: #0081A0; border-radius: 12px; padding: 10px 14px; color: #FFFFFF; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-weight: 800; font-size: 13px; letter-spacing: -0.5px;">gopay</span>
+              <div style="height: 14px; width: 1px; background: rgba(255,255,255,0.4);"></div>
+              <div>
+                <div style="font-size: 13px; font-weight: 700;">Rp54.200</div>
+                <div style="font-size: 10px; opacity: 0.85;">2.450 Coins</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 14px; font-size: 11px; font-weight: 600;">
+              <span>Bayar</span>
+              <span>Top Up</span>
+              <span>Eksplor</span>
+            </div>
+          </div>
+
+          <!-- Banner Penanda Preferensi Hemat Aktif -->
+          <div style="margin: 0 16px 14px 16px; background: var(--primary-subtle); border-radius: var(--radius-card); padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; border: 1px solid rgba(11, 110, 79, 0.15);" onclick="goToScreen('screen-preference')" data-layer="Molekul/BannerPreferensi">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; background: var(--primary); color: #fff; border-radius: 50%;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </span>
+              <div>
+                <div style="font: var(--type-small); font-weight: 700; color: var(--primary);" id="homePreferenceTitle">Preferensi Hemat aktif</div>
+                <div style="font: var(--type-caption); color: var(--text-secondary);">Maks. +3 mnt jemput &bull; Tap untuk atur</div>
+              </div>
+            </div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </div>
+
+          <!-- Kolom Pencarian Pill -->
+          <div class="pill-search-container" onclick="goToScreen('screen-search')" data-layer="Molekul/SearchBar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span style="font: var(--type-body); color: var(--text-secondary); flex: 1;">Mau ke mana hari ini?</span>
+          </div>
+
+          <!-- Grid Layanan 4 per baris -->
+          <div class="service-grid" data-layer="Organism/ServiceGrid">
+            <div class="service-item" onclick="goToScreen('screen-search')">
+              <div class="service-icon-box">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M15.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM5 12c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5s1.6-3.5 3.5-3.5 3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5zm14-8.5c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5s1.6-3.5 3.5-3.5 3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5zm-5.2-9.7l-1.8-3.3c-.4-.7-1.1-1-1.8-1h-3.2v2h2.7l1.3 2.5-4 4.5 1.5 1.3 4.1-4.6 2.3 2.3h4.1v-2h-3.3l-1.9-1.4z"/>
+                </svg>
+              </div>
+              <span style="font: var(--type-caption); font-weight: 600; color: var(--text-primary);">GoRide</span>
+            </div>
+            <div class="service-item">
+              <div class="service-icon-box" style="background: #E0F2FE; color: #0284C7;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-4.66l.12-.34h13.77l.11.34V17z"/><circle cx="7.5" cy="14.5" r="1.5"/><circle cx="16.5" cy="14.5" r="1.5"/></svg>
+              </div>
+              <span style="font: var(--type-caption); font-weight: 600; color: var(--text-primary);">GoCar</span>
+            </div>
+            <div class="service-item">
+              <div class="service-icon-box" style="background: #FEE2E2; color: #DC2626;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18 6h-2c0-2.21-1.79-4-4-4S8 3.79 8 6H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6-2c1.1 0 2 .9 2 2h-4c0-1.1.9-2 2-2zm6 16H6V8h2v2c0 .55.45 1 1 1s1-.45 1-1V8h4v2c0 .55.45 1 1 1s1-.45 1-1V8h2v12z"/></svg>
+              </div>
+              <span style="font: var(--type-caption); font-weight: 600; color: var(--text-primary);">GoFood</span>
+            </div>
+            <div class="service-item">
+              <div class="service-icon-box" style="background: #FEF3C7; color: #D97706;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+              </div>
+              <span style="font: var(--type-caption); font-weight: 600; color: var(--text-primary);">GoSend</span>
+            </div>
+          </div>
+
+          <!-- Promo Highlight Banner Card -->
+          <div style="margin: 4px 16px 12px 16px; background: linear-gradient(135deg, #0B6E4F 0%, #15803D 100%); border-radius: var(--radius-card); padding: 16px; color: #FFFFFF; box-shadow: 0 4px 12px rgba(11, 110, 79, 0.2);">
+            <div style="font: var(--type-caption); text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9;">Pagi Mahasiswa Cermat</div>
+            <div style="font: var(--type-body-strong); margin: 4px 0 6px 0;">Hemat s.d. Rp4.500 tiap perjalanan pagi ke Kampus!</div>
+            <div style="font: var(--type-caption); opacity: 0.85;">Preferensi tarif otomatis mengutamakan opsi terbaik untukmu.</div>
+          </div>
+
+          <!-- Bottom Navigation (4 Tab: Beranda, Promo, Aktivitas, Chat) -->
+          <div class="bottom-nav-bar" data-layer="Organism/BottomNavigation">
+            <div class="bottom-nav-item active">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+              <span>Beranda</span>
+            </div>
+            <div class="bottom-nav-item">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="4" rx="1"></rect><path d="M12 8v13m7-13v13M5 8v13M12 3a3 3 0 0 0-3 3h6a3 3 0 0 0-3-3z"></path></svg>
+              <span>Promo</span>
+            </div>
+            <div class="bottom-nav-item">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              <span>Aktivitas</span>
+            </div>
+            <div class="bottom-nav-item">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              <span>Chat</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             LAYAR 2: PREFERENSI TARIF
+             ==================================================================== -->
+        <div class="screen-view" id="screen-preference" data-layer="Layar/PreferensiTarif">
+          <div class="app-top-bar" data-layer="Organism/TopBar">
+            <button class="icon-btn" onclick="goToScreen('screen-home')" aria-label="Kembali ke Beranda" data-layer="Atom/BackButton">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <div class="app-top-bar-title">Preferensi Tarif</div>
+          </div>
+
+          <div style="flex: 1; overflow-y: auto; padding: 16px;" data-layer="Organism/PreferenceContent">
+            <div style="font: var(--type-small); color: var(--text-secondary); margin-bottom: 20px;">
+              Atur default pilihan tarif saat kamu memesan. Sistem akan otomatis memilihkan opsi yang paling sesuai dengan kebiasaanmu.
+            </div>
+
+            <!-- Preferensi Layanan -->
+            <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px;">
+
+              <!-- GoRide Preference -->
+              <div style="display: flex; justify-content: space-between; align-items: center;" data-layer="Molekul/PrefRowGoRide">
+                <div>
+                  <div style="font: var(--type-body-strong); color: var(--text-primary);">GoRide</div>
+                  <div style="font: var(--type-caption); color: var(--text-secondary);">Ojek motor harian</div>
+                </div>
+                <div class="segmented-control" style="width: 150px;">
+                  <div class="segmented-item active" id="seg-goride-hemat" onclick="setServicePref('goride', 'hemat')">Hemat</div>
+                  <div class="segmented-item" id="seg-goride-cepat" onclick="setServicePref('goride', 'cepat')">Cepat</div>
+                </div>
+              </div>
+
+              <!-- GoCar Preference -->
+              <div style="display: flex; justify-content: space-between; align-items: center;" data-layer="Molekul/PrefRowGoCar">
+                <div>
+                  <div style="font: var(--type-body-strong); color: var(--text-primary);">GoCar</div>
+                  <div style="font: var(--type-caption); color: var(--text-secondary);">Mobil roda empat</div>
+                </div>
+                <div class="segmented-control" style="width: 150px;">
+                  <div class="segmented-item active" id="seg-gocar-hemat" onclick="setServicePref('gocar', 'hemat')">Hemat</div>
+                  <div class="segmented-item" id="seg-gocar-cepat" onclick="setServicePref('gocar', 'cepat')">Cepat</div>
+                </div>
+              </div>
+
+              <!-- GoSend Preference -->
+              <div style="display: flex; justify-content: space-between; align-items: center;" data-layer="Molekul/PrefRowGoSend">
+                <div>
+                  <div style="font: var(--type-body-strong); color: var(--text-primary);">GoSend</div>
+                  <div style="font: var(--type-caption); color: var(--text-secondary);">Pengiriman paket</div>
+                </div>
+                <div class="segmented-control" style="width: 150px;">
+                  <div class="segmented-item active" id="seg-gosend-hemat" onclick="setServicePref('gosend', 'hemat')">Hemat</div>
+                  <div class="segmented-item" id="seg-gosend-cepat" onclick="setServicePref('gosend', 'cepat')">Cepat</div>
+                </div>
+              </div>
+
+              <!-- GoFood Preference (Default: Cepat) -->
+              <div style="display: flex; justify-content: space-between; align-items: center;" data-layer="Molekul/PrefRowGoFood">
+                <div>
+                  <div style="font: var(--type-body-strong); color: var(--text-primary);">GoFood</div>
+                  <div style="font: var(--type-caption); color: var(--text-secondary);">Pesan antar makanan</div>
+                </div>
+                <div class="segmented-control" style="width: 150px;">
+                  <div class="segmented-item" id="seg-gofood-hemat" onclick="setServicePref('gofood', 'hemat')">Hemat</div>
+                  <div class="segmented-item active" id="seg-gofood-cepat" onclick="setServicePref('gofood', 'cepat')">Cepat</div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Divider -->
+            <div style="height: 1px; background: var(--surface-muted); margin: 20px 0;"></div>
+
+            <!-- Slider Waktu Jemput -->
+            <div style="margin-bottom: 24px;" data-layer="Molekul/PickupLimitSlider">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
+                <div style="font: var(--type-body-strong); color: var(--text-primary);">Batas tambahan waktu jemput</div>
+                <div style="font: var(--type-body-strong); color: var(--primary);" id="sliderValueText">+3 menit</div>
+              </div>
+              <div style="font: var(--type-caption); color: var(--text-secondary); margin-bottom: 12px;">
+                Jika jemput Hemat melebihi waktu Cepat lebih dari batas ini, kami otomatis pilihkan Cepat agar kamu tidak terlambat.
+              </div>
+              <div class="custom-slider-container">
+                <input type="range" class="slider-range-input" id="waitLimitSlider" min="0" max="10" step="1" value="3" oninput="updateWaitSlider(this.value)">
+                <div style="display: flex; justify-content: space-between; font: var(--type-caption); color: var(--text-secondary); margin-top: 6px;">
+                  <span>0 mnt</span>
+                  <span>+3 mnt</span>
+                  <span>+5 mnt</span>
+                  <span>+10 mnt</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="background: var(--surface-muted); border-radius: var(--radius-card); padding: 12px 16px; display: flex; gap: 8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              <div style="font: var(--type-caption); color: var(--text-secondary); line-height: 18px;">
+                Kamu tetap bisa mengganti kartu tarif sewaktu memesan sebelum menekan tombol konfirmasi.
+              </div>
+            </div>
+          </div>
+
+          <div style="padding: 16px; border-top: 1px solid var(--surface-muted);" data-layer="Organism/BottomAction">
+            <button class="atom-button atom-button--primary" onclick="savePreferencesAndToast()" data-layer="Atom/ButtonSimpan">
+              Simpan Preferensi
+            </button>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             LAYAR 3: PILIH TUJUAN
+             ==================================================================== -->
+        <div class="screen-view" id="screen-search" data-layer="Layar/PilihTujuan">
+          <div class="app-top-bar" data-layer="Organism/TopBar">
+            <button class="icon-btn" onclick="goToScreen('screen-home')" aria-label="Kembali ke Beranda" data-layer="Atom/BackButton">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <div class="app-top-bar-title">Pilih Tujuan</div>
+          </div>
+
+          <div style="padding: 12px 16px; background: var(--surface); border-bottom: 8px solid var(--surface-muted);" data-layer="Organism/InputLocationSection">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+              <div style="width: 10px; height: 10px; border-radius: 50%; background: #0284C7; flex-shrink: 0;"></div>
+              <div style="flex: 1; font: var(--type-small); color: var(--text-secondary);">Lokasi jemput: <span style="color: var(--text-primary); font-weight: 500;">Kost Raka (Jl. Sukabirus No. 12)</span></div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px; height: 48px; background: var(--surface-muted); border-radius: var(--radius-input); padding: 0 12px; border: 1.5px solid var(--primary);" data-layer="Atom/InputTujuan">
+              <div style="width: 10px; height: 10px; border-radius: 50%; background: #DC2626; flex-shrink: 0;"></div>
+              <input type="text" id="destinationInputField" value="Kampus" style="flex: 1; border: none; background: transparent; font: var(--type-body); color: var(--text-primary); outline: none;" placeholder="Cari alamat atau tempat...">
+              <button style="border: none; background: transparent; color: var(--text-secondary); cursor: pointer;" onclick="document.getElementById('destinationInputField').value=''">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Riwayat (Kampus 1 ketukan di posisi teratas) -->
+          <div style="flex: 1; overflow-y: auto;" data-layer="Organism/HistoryList">
+            <div style="padding: 12px 16px 4px 16px; font: var(--type-caption); color: var(--text-secondary); text-transform: uppercase; font-weight: 600;">
+              Riwayat & Sering Dituju
+            </div>
+
+            <!-- Item 1: Kampus -->
+            <div class="history-row" onclick="selectDestinationAndProceed('Kampus Universitas')" data-layer="Molekul/HistoryItemKampus">
+              <div class="history-icon" style="background: #E8F5E9; color: var(--primary);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                </svg>
+              </div>
+              <div style="flex: 1;">
+                <div style="font: var(--type-body-strong); color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+                  <span>Kampus Universitas</span>
+                  <span class="atom-badge atom-badge--primary-subtle">Favorit</span>
+                </div>
+                <div style="font: var(--type-caption); color: var(--text-secondary);">Gedung Kuliah Bersama &bull; 3.2 km</div>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--border)" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+
+            <!-- Item 2: Stasiun Kereta -->
+            <div class="history-row" onclick="selectDestinationAndProceed('Stasiun Kereta')" data-layer="Molekul/HistoryItemStasiun">
+              <div class="history-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="16" rx="2"></rect><path d="M4 11h16M12 3v8m-4 8l-2 3m10-3l2 3"></path><circle cx="8" cy="15" r="1"></circle><circle cx="16" cy="15" r="1"></circle></svg>
+              </div>
+              <div style="flex: 1;">
+                <div style="font: var(--type-body-strong); color: var(--text-primary);">Stasiun Kereta Pusat</div>
+                <div style="font: var(--type-caption); color: var(--text-secondary);">Pintu Barat Stasiun &bull; 5.8 km</div>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--border)" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+
+            <!-- Item 3: Mall Sentral -->
+            <div class="history-row" onclick="selectDestinationAndProceed('Mall Sentral')" data-layer="Molekul/HistoryItemMall">
+              <div class="history-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+              </div>
+              <div style="flex: 1;">
+                <div style="font: var(--type-body-strong); color: var(--text-primary);">Mall Grand Sentral</div>
+                <div style="font: var(--type-caption); color: var(--text-secondary);">Lobby Barat &bull; 4.1 km</div>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--border)" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+          </div>
+
+          <div style="padding: 16px; border-top: 1px solid var(--surface-muted);" data-layer="Organism/BottomAction">
+            <button class="atom-button atom-button--primary" onclick="goToScreen('screen-fare')" data-layer="Atom/ButtonLanjut">
+              Lanjut ke Pemilihan Tarif
+            </button>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             LAYAR 4: PILIH TARIF (HAPPY PATH & STATE TAMBAHAN)
+             ==================================================================== -->
+        <div class="screen-view" id="screen-fare" data-layer="Layar/PilihTarif">
+          <!-- Back Button floating on top of map -->
+          <button class="icon-btn" onclick="goToScreen('screen-search')" style="position: absolute; top: 32px; left: 16px; z-index: 50;" aria-label="Kembali ke Pilih Tujuan" data-layer="Atom/BackButtonFloating">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+
+          <!-- Interactive Vector Map Simulation -->
+          <div class="map-canvas-container" data-layer="Organism/MapBackground">
+            <svg class="map-svg" viewBox="0 0 360 480" fill="none">
+              <!-- Terrain background -->
+              <rect width="360" height="480" fill="#EAF0EC"/>
+              
+              <!-- Parks -->
+              <path d="M20 40C50 30 110 50 90 120C70 190 10 180 20 40Z" fill="#D3E8D5"/>
+              <path d="M260 80C310 90 350 140 330 200C300 240 240 210 260 80Z" fill="#D3E8D5"/>
+
+              <!-- Roads -->
+              <path d="M-20 180H380" stroke="#FFFFFF" stroke-width="14"/>
+              <path d="M-20 310H380" stroke="#FFFFFF" stroke-width="10"/>
+              <path d="M120 -20V350" stroke="#FFFFFF" stroke-width="14"/>
+              <path d="M280 -20V350" stroke="#FFFFFF" stroke-width="10"/>
+
+              <!-- Primary Route line with traffic conditions (Kost to Kampus) -->
+              <path d="M70 140L120 140L120 230L250 230L250 160" stroke="#0B6E4F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1 1"/>
+
+              <!-- Pickup marker (Kost Raka) with pulse ring -->
+              <circle cx="70" cy="140" r="16" fill="rgba(11, 110, 79, 0.25)"/>
+              <circle cx="70" cy="140" r="8" fill="#0B6E4F"/>
+              <circle cx="70" cy="140" r="3" fill="#FFFFFF"/>
+              <!-- Label pickup -->
+              <rect x="25" y="105" width="90" height="24" rx="6" fill="#FFFFFF" filter="drop-shadow(0px 2px 4px rgba(0,0,0,0.15))"/>
+              <text x="70" y="121" font-family="Inter" font-size="10" font-weight="700" fill="#1A1A1A" text-anchor="middle">Kost Raka</text>
+
+              <!-- Destination marker (Kampus) -->
+              <circle cx="250" cy="160" r="16" fill="rgba(220, 38, 38, 0.25)"/>
+              <circle cx="250" cy="160" r="8" fill="#DC2626"/>
+              <circle cx="250" cy="160" r="3" fill="#FFFFFF"/>
+              <!-- Label destination -->
+              <rect x="210" y="125" width="80" height="24" rx="6" fill="#FFFFFF" filter="drop-shadow(0px 2px 4px rgba(0,0,0,0.15))"/>
+              <text x="250" y="141" font-family="Inter" font-size="10" font-weight="700" fill="#1A1A1A" text-anchor="middle">Kampus</text>
+
+              <!-- Nearby Driver bikes (visual simulation) -->
+              <circle cx="95" cy="165" r="4.5" fill="#0B6E4F"/>
+              <circle cx="160" cy="225" r="4.5" fill="#0B6E4F"/>
+              <circle cx="130" cy="115" r="4.5" fill="#0B6E4F"/>
+            </svg>
+          </div>
+
+          <!-- Bottom Sheet (Top corner radius 16, thumb zone placement) -->
+          <div class="organism-bottom-sheet" id="tariffBottomSheet" data-layer="Organism/BottomSheetPilihTarif">
+            <div class="bottom-sheet-handle"></div>
+
+            <!-- Header Info: Tujuan -->
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+              <div>
+                <span style="font: var(--type-body-strong); color: var(--text-primary); font-family: var(--font-display);">Pilihan Tarif GoRide</span>
+                <span style="font: var(--type-caption); color: var(--text-secondary); margin-left: 6px;">&bull; 3.2 km</span>
+              </div>
+              <span style="font: var(--type-caption); color: var(--primary); font-weight: 700; cursor: pointer;" onclick="goToScreen('screen-preference')">Ubah preferensi</span>
+            </div>
+
+            <!-- Edge Case E1 Warning Banner -->
+            <div class="edge-case-banner" id="edgeCaseE1Banner" style="display: none;" data-layer="Molekul/BannerWarningE1">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--warning-text)" stroke-width="2.5" style="flex-shrink: 0; margin-top: 1px;">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              <div>
+                <strong>Jemput Hemat 12 menit</strong>, melewati batas +3 menit. Kami pilihkan Cepat. (Kartu Hemat tetap bisa kamu pilih).
+              </div>
+            </div>
+
+            <!-- NORMAL CONTENT -->
+            <div id="tariffNormalContent" class="organism-panel-pemilihan-tarif" style="display: flex; flex-direction: column; gap: 14px;" data-layer="Organism/PanelPemilihanTarif">
+              
+              <!-- 2 Kartu Opsi Sejajar (Equal Weight 50-50) -->
+              <div class="cards-row-2col" data-layer="Organism/RowKartuOpsiTarif">
+
+                <!-- KARTU 1: HEMAT -->
+                <!-- Selected = border 2 primary, BUKAN latar hijau! Font & warna nama kartu sama persis -->
+                <div class="molekul-kartu-opsi-tarif is-selected" id="cardHemat" onclick="selectTariffOption('hemat')" data-layer="Molekul/KartuOpsiTarif/Hemat">
+                  <div class="kartu-header">
+                    <span class="kartu-service-name">Hemat</span>
+                    <div class="atom-radio is-selected" id="radioHemat" data-layer="Atom/RadioHemat"></div>
+                  </div>
+                  <div class="kartu-price" id="priceHematText">Rp7.000</div>
+                  <div class="kartu-pickup-estimate">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <span id="pickupHematText">Jemput 6 mnt</span>
+                  </div>
+                  <div class="kartu-badge-container" id="badgeHematContainer">
+                    <span class="atom-badge atom-badge--primary-subtle" id="badgeHematPreference">Sesuai preferensi</span>
+                  </div>
+                </div>
+
+                <!-- KARTU 2: CEPAT -->
+                <div class="molekul-kartu-opsi-tarif" id="cardCepat" onclick="selectTariffOption('cepat')" data-layer="Molekul/KartuOpsiTarif/Cepat">
+                  <div class="kartu-header">
+                    <span class="kartu-service-name">Cepat</span>
+                    <div class="atom-radio" id="radioCepat" data-layer="Atom/RadioCepat"></div>
+                  </div>
+                  <div class="kartu-price" id="priceCepatText">Rp11.500</div>
+                  <div class="kartu-pickup-estimate">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <span id="pickupCepatText">Jemput 4 mnt</span>
+                  </div>
+                  <div class="kartu-badge-container" id="badgeCepatContainer"></div>
+                </div>
+
+              </div>
+
+              <!-- Strip Selisih (Varian normal & warning) -->
+              <div class="molekul-strip-selisih" id="stripSelisih" data-layer="Molekul/StripSelisih">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <span id="stripSelisihText">Hemat Rp4.500, jemput +2 menit</span>
+              </div>
+
+              <!-- Payment & Promo Mini Bar -->
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 2px 4px; font: var(--type-caption); color: var(--text-secondary);" data-layer="Molekul/PaymentBar">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="font-weight: 800; color: #0284C7;">GoPay</span>
+                  <span style="color: var(--text-primary); font-weight: 600;">Rp54.200</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 4px; color: var(--primary); font-weight: 700; cursor: pointer;">
+                  <span>Promo 10% terpakai</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </div>
+              </div>
+
+              <!-- Primary Action Button: "Pesan GoRide Hemat" / "Pesan GoRide Cepat" -->
+              <button class="atom-button atom-button--primary" id="btnPesanGoRide" onclick="executeOrderProcess()" data-layer="Atom/ButtonPesanGoRide">
+                <span id="btnPesanLabel">Pesan GoRide Hemat</span>
+              </button>
+
+            </div>
+
+            <!-- SKELETON LOADING STATE -->
+            <div id="tariffLoadingContent" style="display: none; flex-direction: column; gap: 14px;" data-layer="Organism/SkeletonLoading">
+              <div class="cards-row-2col">
+                <div style="height: 104px; border: 1px solid var(--surface-muted); border-radius: var(--radius-card); padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+                  <div class="skeleton-box" style="height: 16px; width: 50%;"></div>
+                  <div class="skeleton-box" style="height: 22px; width: 75%;"></div>
+                  <div class="skeleton-box" style="height: 14px; width: 60%;"></div>
+                </div>
+                <div style="height: 104px; border: 1px solid var(--surface-muted); border-radius: var(--radius-card); padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+                  <div class="skeleton-box" style="height: 16px; width: 50%;"></div>
+                  <div class="skeleton-box" style="height: 22px; width: 75%;"></div>
+                  <div class="skeleton-box" style="height: 14px; width: 60%;"></div>
+                </div>
+              </div>
+              <div class="skeleton-box" style="height: 38px; border-radius: var(--radius-card); width: 100%;"></div>
+              <button class="atom-button atom-button--primary disabled" disabled data-layer="Atom/ButtonDisabledLoading">
+                <span>Memuat Pilihan Tarif...</span>
+              </button>
+            </div>
+
+            <!-- ERROR STATE -->
+            <div id="tariffErrorContent" class="error-container" style="display: none;" data-layer="Organism/ErrorView">
+              <div class="error-icon-box">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              </div>
+              <div>
+                <div style="font: var(--type-body-strong); color: var(--text-primary); margin-bottom: 4px;">Gagal Memuat Tarif</div>
+                <div style="font: var(--type-small); color: var(--text-secondary); max-width: 280px; margin: 0 auto;">
+                  Harga belum bisa dimuat. Periksa sinyal, lalu coba lagi.
+                </div>
+              </div>
+              <button class="atom-button atom-button--primary" onclick="retryTariffLoading()" style="width: auto; padding: 0 24px;" data-layer="Atom/ButtonCobaLagi">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                <span>Coba lagi</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             LAYAR 5: DRIVER DITEMUKAN
+             ==================================================================== -->
+        <div class="screen-view" id="screen-driver" data-layer="Layar/DriverDitemukan">
+          <!-- Back to home floating button -->
+          <button class="icon-btn" onclick="goToScreen('screen-home')" style="position: absolute; top: 32px; left: 16px; z-index: 50;" aria-label="Kembali ke Beranda" data-layer="Atom/BackButtonFloating">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+
+          <!-- Interactive Map with Moving Driver Simulation -->
+          <div class="map-canvas-container" data-layer="Organism/DriverMap">
+            <svg class="map-svg" viewBox="0 0 360 480" fill="none">
+              <rect width="360" height="480" fill="#EAF0EC"/>
+              <path d="M-20 180H380" stroke="#FFFFFF" stroke-width="14"/>
+              <path d="M120 -20V350" stroke="#FFFFFF" stroke-width="14"/>
+              
+              <!-- Route to user -->
+              <path d="M100 160L120 160L120 140L70 140" stroke="#0B6E4F" stroke-width="5" stroke-linecap="round"/>
+
+              <!-- User Kost marker -->
+              <circle cx="70" cy="140" r="10" fill="#0284C7"/>
+              <circle cx="70" cy="140" r="4" fill="#FFFFFF"/>
+
+              <!-- Driver live pin -->
+              <circle cx="100" cy="160" r="14" fill="#0B6E4F"/>
+              <circle cx="100" cy="160" r="6" fill="#FFFFFF"/>
+            </svg>
+          </div>
+
+          <!-- Bottom Sheet: Driver Info (slides up 300ms) -->
+          <div class="organism-bottom-sheet" style="max-height: 420px;" data-layer="Organism/BottomSheetDriver">
+            <div class="bottom-sheet-handle"></div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <div>
+                <span class="atom-badge atom-badge--primary-subtle" style="font-size: 11px;">Driver menuju lokasimu</span>
+                <div style="font: var(--type-title); font-size: 20px; color: var(--text-primary); margin-top: 2px;">Tiba dalam 4 menit</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font: var(--type-caption); color: var(--text-secondary);">Tarif Terpilih</div>
+                <div style="font: var(--type-body-strong); color: var(--primary);" id="driverConfirmedPrice">Rp7.000</div>
+              </div>
+            </div>
+
+            <!-- Kartu Driver -->
+            <div class="driver-card" style="margin-bottom: 12px;" data-layer="Molekul/KartuDriver">
+              <div class="driver-avatar" data-layer="Atom/FotoDriver">
+                BS
+              </div>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                  <span style="font: var(--type-body-strong); color: var(--text-primary);">Budi Santoso</span>
+                  <span style="font: var(--type-small); font-weight: 700; color: #D97706; display: flex; align-items: center; gap: 2px;">
+                    ★ 4.9
+                  </span>
+                </div>
+                <div style="font: var(--type-body-strong); color: var(--text-primary); letter-spacing: 0.5px; margin-top: 2px;">
+                  B 1234 GJK
+                </div>
+                <div style="font: var(--type-caption); color: var(--text-secondary);">
+                  Honda Vario 125 &bull; Hitam
+                </div>
+              </div>
+            </div>
+
+            <!-- Savings highlight banner -->
+            <div class="savings-highlight-box" style="margin-bottom: 16px;" data-layer="Molekul/InfoHemat">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.5" style="flex-shrink: 0; margin-top: 2px;">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+              <div id="driverSavingsBannerText">
+                <strong>Hebat!</strong> Kamu <strong>hemat Rp4.500</strong> di perjalanan ini dan <strong>Rp36.000</strong> bulan ini dengan opsi Hemat.
+              </div>
+            </div>
+
+            <!-- 2 Tombol Aksi (Hubungi & Lacak) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;" data-layer="Organism/DriverActionButtons">
+              <button class="atom-button atom-button--secondary" onclick="alert('Membuka chat ke Pak Budi Santoso: \"Halo mas, saya sudah di depan ya\"')" data-layer="Atom/ButtonHubungi">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                <span>Hubungi</span>
+              </button>
+              <button class="atom-button atom-button--primary" onclick="alert('Pelacakan rute real-time aktif pada peta')" data-layer="Atom/ButtonLacak">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                <span>Lacak</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- End .screen-container -->
+    </div><!-- End .device-frame -->
+
+    <!-- Desktop Sidebar: Design Specs & Tokens -->
+    <aside class="prototype-sidebar">
+      <h3>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 12 22 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        Design System & Tokens
+      </h3>
+      
+      <p style="margin-bottom: 14px; font-size: 13px;">
+        Prototipe Hi-Fi pemilihan tarif GoRide dirancang khusus untuk memecahkan bias visual opsi "Cepat" bagi persona mahasiswa <strong>Raka (21 tahun)</strong>.
+      </p>
+
+      <div style="margin-bottom: 14px;">
+        <strong style="color: #F8FAFC;">Variabel Warna (Semantik):</strong>
+        <div style="margin-top: 6px; display: flex; flex-direction: column; gap: 4px;">
+          <div><span class="token-color-preview" style="background: #0B6E4F;"></span><span class="token-chip">--primary: #0B6E4F</span></div>
+          <div><span class="token-color-preview" style="background: #E8F3EE; border: 1px solid #666;"></span><span class="token-chip">--primary-subtle: #E8F3EE</span></div>
+          <div><span class="token-color-preview" style="background: #1A1A1A;"></span><span class="token-chip">--text-primary: #1A1A1A</span></div>
+          <div><span class="token-color-preview" style="background: #5F6368;"></span><span class="token-chip">--text-secondary: #5F6368</span></div>
+          <div><span class="token-color-preview" style="background: #FFF4E0;"></span><span class="token-chip">--warning-bg: #FFF4E0</span></div>
+          <div><span class="token-color-preview" style="background: #B3261E;"></span><span class="token-chip">--error: #B3261E</span></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <strong style="color: #F8FAFC;">Prinsip Desain Terverifikasi:</strong>
+        <ul style="margin-top: 6px; margin-left: 18px;">
+          <li><strong>Equal Weight:</strong> Cepat & Hemat memiliki lebar 50-50, ukuran font sama, warna teks sama, dan latar kartu putih netral yang sama.</li>
+          <li><strong>Bukan Latar Hijau:</strong> Status terpilih menggunakan border 2dp primary dan radio aktif, menjaga kontras teks 16.1:1 (AAA).</li>
+          <li><strong>Zona Jempol (Thumb Zone):</strong> Aksi utama berada di sepertiga bawah layar untuk kemudahan satu tangan.</li>
+          <li><strong>Edge Case E1:</strong> Jemput Hemat &gt; +3 menit otomatis mengarahkan ke Cepat secara transparan.</li>
+        </ul>
+      </div>
+
+      <div style="background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 10px; border: 1px solid #334155;">
+        <div style="font-weight: 700; color: #10B981; margin-bottom: 4px;">Status Audit Aksesibilitas:</div>
+        <div style="font-size: 12px; color: #E2E8F0;">
+          &bull; Kontras Teks: <strong>16.1:1</strong> (Lolos WCAG AAA)<br>
+          &bull; Area Sentuh: <strong>&ge; 44 × 44 dp</strong> (Lolos AAA)<br>
+          &bull; Non-Warna: <strong>Radio + Border 2dp</strong>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Interactive JavaScript Logic -->
+  <script>
+    const appState = {
+      currentScreen: 'screen-home',
+      selectedTariff: 'hemat',
+      currentScenario: 'normal',
+      preferences: {
+        goride: 'hemat',
+        gocar: 'hemat',
+        gosend: 'hemat',
+        gofood: 'cepat',
+        maxExtraWaitMinutes: 3
+      },
+      data: {
+        normal: {
+          hemat: { price: 7000, priceFormatted: 'Rp7.000', pickupMins: 6 },
+          cepat: { price: 11500, priceFormatted: 'Rp11.500', pickupMins: 4 }
+        },
+        edge1: {
+          hemat: { price: 7000, priceFormatted: 'Rp7.000', pickupMins: 12 },
+          cepat: { price: 11500, priceFormatted: 'Rp11.500', pickupMins: 4 }
+        }
+      }
+    };
+
+    function goToScreen(screenId) {
+      appState.currentScreen = screenId;
+      document.querySelectorAll('.screen-view').forEach(view => view.classList.remove('active'));
+      const target = document.getElementById(screenId);
+      if (target) target.classList.add('active');
+
+      document.querySelectorAll('.state-btn').forEach(btn => btn.classList.remove('active'));
+      const screenBtnMap = {
+        'screen-home': 0,
+        'screen-preference': 1,
+        'screen-search': 2,
+        'screen-fare': 3,
+        'screen-driver': 7
+      };
+      const idx = screenBtnMap[screenId];
+      if (idx !== undefined) {
+        const btns = document.querySelectorAll('.state-btn');
+        if (btns[idx]) btns[idx].classList.add('active');
+      }
+
+      if (screenId === 'screen-fare') {
+        renderFareScreen();
+      }
+    }
+
+    function setServicePref(service, option) {
+      appState.preferences[service] = option;
+      const hematSeg = document.getElementById(`seg-${service}-hemat`);
+      const cepatSeg = document.getElementById(`seg-${service}-cepat`);
+      if (option === 'hemat') {
+        hematSeg.classList.add('active');
+        cepatSeg.classList.remove('active');
+      } else {
+        cepatSeg.classList.add('active');
+        hematSeg.classList.remove('active');
+      }
+    }
+
+    function updateWaitSlider(value) {
+      appState.preferences.maxExtraWaitMinutes = parseInt(value, 10);
+      document.getElementById('sliderValueText').innerText = `+${value} menit`;
+    }
+
+    function savePreferencesAndToast() {
+      showToast('Preferensi tersimpan');
+      const goridePref = appState.preferences.goride;
+      const prefTitle = document.getElementById('homePreferenceTitle');
+      if (goridePref === 'hemat') {
+        prefTitle.innerText = 'Preferensi Hemat aktif';
+      } else {
+        prefTitle.innerText = 'Preferensi Cepat aktif';
+      }
+
+      if (appState.currentScenario === 'normal') {
+        appState.selectedTariff = goridePref;
+      }
+
+      setTimeout(() => {
+        goToScreen('screen-home');
+      }, 700);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('systemToast');
+      document.getElementById('toastMessage').innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2400);
+    }
+
+    function selectDestinationAndProceed(destinationName) {
+      document.getElementById('destinationInputField').value = destinationName;
+      goToScreen('screen-fare');
+    }
+
+    function setTariffState(state) {
+      appState.currentScenario = state;
+      goToScreen('screen-fare');
+
+      document.querySelectorAll('.state-btn').forEach(btn => btn.classList.remove('active'));
+      const stateIndexMap = {
+        'loading': 4,
+        'edge1': 5,
+        'error': 6
+      };
+      const idx = stateIndexMap[state];
+      if (idx !== undefined) {
+        document.querySelectorAll('.state-btn')[idx].classList.add('active');
+      }
+
+      renderFareScreen();
+    }
+
+    function renderFareScreen() {
+      const normalContent = document.getElementById('tariffNormalContent');
+      const loadingContent = document.getElementById('tariffLoadingContent');
+      const errorContent = document.getElementById('tariffErrorContent');
+      const e1Banner = document.getElementById('edgeCaseE1Banner');
+
+      normalContent.style.display = 'none';
+      loadingContent.style.display = 'none';
+      errorContent.style.display = 'none';
+      e1Banner.style.display = 'none';
+
+      if (appState.currentScenario === 'loading') {
+        loadingContent.style.display = 'flex';
+        return;
+      }
+
+      if (appState.currentScenario === 'error') {
+        errorContent.style.display = 'flex';
+        return;
+      }
+
+      normalContent.style.display = 'flex';
+
+      const isE1 = (appState.currentScenario === 'edge1');
+      const currentData = isE1 ? appState.data.edge1 : appState.data.normal;
+
+      document.getElementById('pickupHematText').innerText = `Jemput ${currentData.hemat.pickupMins} mnt`;
+      document.getElementById('pickupCepatText').innerText = `Jemput ${currentData.cepat.pickupMins} mnt`;
+      document.getElementById('priceHematText').innerText = currentData.hemat.priceFormatted;
+      document.getElementById('priceCepatText').innerText = currentData.cepat.priceFormatted;
+
+      if (isE1) {
+        e1Banner.style.display = 'flex';
+        appState.selectedTariff = 'cepat';
+      } else {
+        appState.selectedTariff = appState.preferences.goride;
+      }
+
+      updateTariffCardUI();
+    }
+
+    function selectTariffOption(option) {
+      appState.selectedTariff = option;
+      updateTariffCardUI();
+    }
+
+    function updateTariffCardUI() {
+      const isHemat = (appState.selectedTariff === 'hemat');
+      const cardHemat = document.getElementById('cardHemat');
+      const cardCepat = document.getElementById('cardCepat');
+      const radioHemat = document.getElementById('radioHemat');
+      const radioCepat = document.getElementById('radioCepat');
+      const strip = document.getElementById('stripSelisih');
+      const stripText = document.getElementById('stripSelisihText');
+      const btnPesanLabel = document.getElementById('btnPesanLabel');
+      const badgeHematPref = document.getElementById('badgeHematPreference');
+
+      const isE1 = (appState.currentScenario === 'edge1');
+      const currentData = isE1 ? appState.data.edge1 : appState.data.normal;
+      const extraTime = currentData.hemat.pickupMins - currentData.cepat.pickupMins;
+      const diffPrice = currentData.cepat.price - currentData.hemat.price;
+      const diffPriceFormatted = 'Rp' + diffPrice.toLocaleString('id-ID');
+
+      if (isHemat) {
+        cardHemat.classList.add('is-selected');
+        cardCepat.classList.remove('is-selected');
+        radioHemat.classList.add('is-selected');
+        radioCepat.classList.remove('is-selected');
+
+        btnPesanLabel.innerText = 'Pesan GoRide Hemat';
+
+        if (isE1) {
+          strip.classList.add('is-warning');
+          stripText.innerText = `Hemat ${diffPriceFormatted}, jemput +${extraTime} menit (melebihi batas)`;
+        } else {
+          strip.classList.remove('is-warning');
+          stripText.innerText = `Hemat ${diffPriceFormatted}, jemput +${extraTime} menit`;
+        }
+
+        if (badgeHematPref) {
+          badgeHematPref.style.display = (appState.preferences.goride === 'hemat') ? 'inline-flex' : 'none';
+        }
+      } else {
+        cardCepat.classList.add('is-selected');
+        cardHemat.classList.remove('is-selected');
+        radioCepat.classList.add('is-selected');
+        radioHemat.classList.remove('is-selected');
+
+        btnPesanLabel.innerText = 'Pesan GoRide Cepat';
+
+        strip.classList.remove('is-warning');
+        stripText.innerText = `Lebih cepat ${extraTime} menit, selisih +${diffPriceFormatted}`;
+      }
+    }
+
+    function executeOrderProcess() {
+      const btn = document.getElementById('btnPesanGoRide');
+      btn.classList.add('is-loading');
+
+      setTimeout(() => {
+        btn.classList.remove('is-loading');
+
+        const isHemat = (appState.selectedTariff === 'hemat');
+        const priceLabel = isHemat ? 'Rp7.000' : 'Rp11.500';
+        document.getElementById('driverConfirmedPrice').innerText = priceLabel;
+
+        const savingsText = document.getElementById('driverSavingsBannerText');
+        if (isHemat) {
+          savingsText.innerHTML = '<strong>Hebat!</strong> Kamu <strong>hemat Rp4.500</strong> di perjalanan ini dan <strong>Rp36.000</strong> bulan ini dengan opsi Hemat.';
+        } else {
+          savingsText.innerHTML = 'Perjalanan cepat diprioritaskan. Kamu menghemat waktu <strong>2 menit</strong> untuk sampai tepat waktu ke Kampus.';
+        }
+
+        goToScreen('screen-driver');
+      }, 700);
+    }
+
+    function retryTariffLoading() {
+      setTariffState('loading');
+      setTimeout(() => {
+        setTariffState('normal');
+      }, 800);
+    }
+
+    let gridActive = false;
+    function toggleGrid() {
+      gridActive = !gridActive;
+      const overlay = document.getElementById('gridOverlay');
+      const colOverlay = document.getElementById('colOverlay');
+      const btn = document.getElementById('toggleGridBtn');
+      if (gridActive) {
+        overlay.classList.add('active');
+        colOverlay.classList.add('active');
+        btn.classList.add('active');
+        btn.innerText = 'Grid Aktif';
+      } else {
+        overlay.classList.remove('active');
+        colOverlay.classList.remove('active');
+        btn.classList.remove('active');
+        btn.innerText = '8pt Grid';
+      }
+    }
+  </script>
+</body>
+</html>

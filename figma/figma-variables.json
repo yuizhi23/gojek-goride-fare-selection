@@ -1,0 +1,164 @@
+{
+  "collection": "Gojek Design System",
+  "modes": ["Default"],
+  "variables": [
+    {
+      "name": "color/primary",
+      "type": "COLOR",
+      "value": "#0B6E4F",
+      "description": "Tombol primary, border 2dp kartu terpilih, radio button terpilih"
+    },
+    {
+      "name": "color/primary-subtle",
+      "type": "COLOR",
+      "value": "#E8F3EE",
+      "description": "Latar strip selisih normal, badge Sesuai preferensi"
+    },
+    {
+      "name": "color/text-primary",
+      "type": "COLOR",
+      "value": "#1A1A1A",
+      "description": "Teks judul, harga, label utama"
+    },
+    {
+      "name": "color/text-secondary",
+      "type": "COLOR",
+      "value": "#5F6368",
+      "description": "Teks estimasi jemput, subjudul, ikon sekunder"
+    },
+    {
+      "name": "color/surface",
+      "type": "COLOR",
+      "value": "#FFFFFF",
+      "description": "Latar belakang dasar dan kartu opsi tarif"
+    },
+    {
+      "name": "color/surface-muted",
+      "type": "COLOR",
+      "value": "#F3F4F6",
+      "description": "Latar skeleton placeholder, input background, divider"
+    },
+    {
+      "name": "color/border",
+      "type": "COLOR",
+      "value": "#8D949E",
+      "description": "Border kartu default / unselected"
+    },
+    {
+      "name": "color/warning-bg",
+      "type": "COLOR",
+      "value": "#FFF4E0",
+      "description": "Latar peringatan edge case E1"
+    },
+    {
+      "name": "color/warning-text",
+      "type": "COLOR",
+      "value": "#8A5A00",
+      "description": "Teks peringatan edge case E1"
+    },
+    {
+      "name": "color/error",
+      "type": "COLOR",
+      "value": "#B3261E",
+      "description": "Indikator error dan koneksi gagal"
+    },
+    {
+      "name": "spacing/4",
+      "type": "FLOAT",
+      "value": 4
+    },
+    {
+      "name": "spacing/8",
+      "type": "FLOAT",
+      "value": 8
+    },
+    {
+      "name": "spacing/16",
+      "type": "FLOAT",
+      "value": 16
+    },
+    {
+      "name": "spacing/24",
+      "type": "FLOAT",
+      "value": 24
+    },
+    {
+      "name": "spacing/32",
+      "type": "FLOAT",
+      "value": 32
+    },
+    {
+      "name": "spacing/48",
+      "type": "FLOAT",
+      "value": 48
+    },
+    {
+      "name": "radius/badge",
+      "type": "FLOAT",
+      "value": 4
+    },
+    {
+      "name": "radius/card",
+      "type": "FLOAT",
+      "value": 8
+    },
+    {
+      "name": "radius/input",
+      "type": "FLOAT",
+      "value": 8
+    },
+    {
+      "name": "radius/button",
+      "type": "FLOAT",
+      "value": 8
+    },
+    {
+      "name": "radius/bottom-sheet",
+      "type": "FLOAT",
+      "value": 16
+    },
+    {
+      "name": "radius/pill",
+      "type": "FLOAT",
+      "value": 999
+    }
+  ],
+  "typography": {
+    "title": {
+      "fontFamily": "Inter",
+      "fontWeight": "Bold",
+      "fontSize": 24,
+      "lineHeight": 32
+    },
+    "price": {
+      "fontFamily": "Inter",
+      "fontWeight": "SemiBold",
+      "fontSize": 20,
+      "lineHeight": 28
+    },
+    "body-strong": {
+      "fontFamily": "Inter",
+      "fontWeight": "SemiBold",
+      "fontSize": 16,
+      "lineHeight": 24
+    },
+    "body": {
+      "fontFamily": "Inter",
+      "fontWeight": "Regular",
+      "fontSize": 16,
+      "lineHeight": 24
+    },
+    "small": {
+      "fontFamily": "Inter",
+      "fontWeight": "Regular",
+      "fontSize": 14,
+      "lineHeight": 20
+    },
+    "caption": {
+      "fontFamily": "Inter",
+      "fontWeight": "Medium",
+      "fontSize": 12,
+      "lineHeight": 16
+    }
+  }
+}
